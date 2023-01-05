@@ -20,24 +20,23 @@ public class SpoonacularController {
 
 
     @GetMapping("mealplanner/week")
-    public ResponseEntity<WeekResponse> getWeekMeals(String numCalories, String diet, String exclusions) {
+    public ResponseEntity<WeekResponse> getWeekMeals(@RequestParam(name = "targetCalories") String numCalories, @RequestParam(name = "diet") String diet, @RequestParam(name = "exclude") String exclusions) {
 
         return (ResponseEntity<WeekResponse>) getMealsEntity(WeekResponse.class, "week", numCalories, diet, exclusions);
     }
 
     @GetMapping("mealplanner/day")
-    public ResponseEntity<DayResponse> getDayMeals(String numCalories, String diet, String exclusions) {
+    public ResponseEntity<DayResponse> getDayMeals(@RequestParam(name = "targetCalories") String numCalories, @RequestParam(name = "diet") String diet, @RequestParam(name = "exclude") String exclusions) {
         return (ResponseEntity<DayResponse>) getMealsEntity(DayResponse.class, "day", numCalories, diet, exclusions);
     }
 
-    public ResponseEntity<?> getMealsEntity(Class<?> responseClass, String time, @RequestParam(name = "targetCalories") String numCalories, @RequestParam(name = "diet") String diet, @RequestParam(name = "exclude")  String exclusions) {
-
+    public ResponseEntity<?> getMealsEntity(Class<?> responseClass, String time, String targetCalories, String diet, String exclusions) {
 
         URI uri = UriComponentsBuilder
                 .fromHttpUrl("https://api.spoonacular.com/mealplanner/generate")
                 .queryParam("timeFrame", time)
                 .queryParam("apiKey", "5741f7f419cf43bebe35ca38e5a43c7e")
-                .queryParamIfPresent("targetCalories", Optional.ofNullable(numCalories))
+                .queryParamIfPresent("targetCalories", Optional.ofNullable(targetCalories))
                 .queryParamIfPresent("diet", Optional.ofNullable(diet))
                 .queryParamIfPresent("exclude", Optional.ofNullable(exclusions))
                 .build()
